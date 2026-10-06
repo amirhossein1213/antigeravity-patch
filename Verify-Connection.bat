@@ -1,15 +1,16 @@
 @echo off
-chcp 65001 >nul
 cd /d "%~dp0"
 
-if "%WT_SESSION%"=="" if "%AG_NO_WT%"=="" (
+if "%WT_SESSION%"=="" (
     where wt.exe >nul 2>&1
-    if %ERRORLEVEL% EQU 0 (
-        set AG_NO_WT=1
-        start wt.exe --title "Verify Antigravity Connection" cmd.exe /c ""%~f0""
+    if not errorlevel 1 (
+        start wt.exe -w 0 nt --title "Verify Antigravity Connection" powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0Verify-Connection.ps1"
         exit /b 0
     )
 )
 
-title بررسی وضعیت اتصال و پچ Antigravity
+title Verify Antigravity Connection
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0Verify-Connection.ps1"
+if errorlevel 1 (
+    pause
+)

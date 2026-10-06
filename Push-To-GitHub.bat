@@ -1,10 +1,10 @@
 @echo off
-chcp 65001 >nul
 cd /d "%~dp0"
-title آپلود پروژه به گیت‌هاب
+title Push Antigravity Iran Patch to GitHub
+
 echo ======================================================================
-echo           در حال آپلود پروژه به مخزن اختصاصی شما در گیت‌هاب...
-echo           https://github.com/amirhossein1213/antigeravity-patch
+echo  Pushing project to your GitHub repository...
+echo  https://github.com/amirhossein1213/antigeravity-patch
 echo ======================================================================
 echo.
 
@@ -12,12 +12,11 @@ git push -u origin main
 
 if %ERRORLEVEL% EQU 0 (
     echo.
-    echo ======================================================================
-    echo  [✓] تبریک! پروژه با موفقیت بر روی گیت‌هاب شما آپلود شد.
-    echo ======================================================================
+    echo [OK] Successfully pushed to GitHub!
 ) else (
     echo.
-    echo [!] اگر پنجره ورود به گیت‌هاب در مرورگر باز شد، لاگین را تایید کنید.
+    echo [!] Push failed or authentication required.
+    echo     Please use GitHub Desktop or check your git credentials.
 )
 echo.
 pause
