@@ -6,7 +6,7 @@ Thank you for considering contributing! This project helps developers worldwide 
 
 ### Reporting Bugs
 
-1. Check [existing issues](https://github.com/kakajan/antigravity-patch/issues) first
+1. Check [existing issues](https://github.com/amirhossein1213/antigeravity-patch/issues) first
 2. Include your OS version, Antigravity version, and proxy tool
 3. Share the proxy log: `%LOCALAPPDATA%\Programs\Antigravity\logs\proxy-YYYYMMDD.log`
 4. Describe steps to reproduce the issue
@@ -71,9 +71,10 @@ git clone https://github.com/YOUR_USERNAME/antigravity-patch.git
 - Remember: this project serves developers in restricted networks — empathy matters
 
 ## Questions?
-
-- Open a [discussion](https://github.com/kakajan/antigravity-patch/discussions)
-- Email: [faslolkhitab@gmail.com](mailto:faslolkhitab@gmail.com)
+ 
+- Open a [discussion](https://github.com/amirhossein1213/antigeravity-patch/discussions)
+- Email: [amirhoseynerazavi@gmail.com](mailto:amirhoseynerazavi@gmail.com)
+- Telegram: [@amirgard](https://t.me/amirgard)
 
 ---
 

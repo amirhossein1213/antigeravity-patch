@@ -202,7 +202,8 @@
 ## مشارکت و سازنده
 
 * **توسعه‌دهنده و نگه‌دارنده مخزن**: [amirhossein1213](https://github.com/amirhossein1213)
-* **ایمیل**: `amirhoseynerazavi@gmail.com`
+* **تلگرام**: [@amirgard](https://t.me/amirgard)
+* **ایمیل**: [amirhoseynerazavi@gmail.com](mailto:amirhoseynerazavi@gmail.com)
 * **مخزن پروژه**: [https://github.com/amirhossein1213/antigeravity-patch](https://github.com/amirhossein1213/antigeravity-patch)
 
 از تمامی توسعه‌دهندگان ایرانی برای ارسال Pull Request، گزارش باگ‌ها یا پیشنهاد قابلیت‌های جدید استقبال می‌کنیم.

@@ -182,7 +182,8 @@ To revert all system settings:
 ## Author & Maintenance
 
 * **Author & Maintainer**: [amirhossein1213](https://github.com/amirhossein1213)
-* **Email**: `amirhoseynerazavi@gmail.com`
+* **Telegram**: [@amirgard](https://t.me/amirgard)
+* **Email**: [amirhoseynerazavi@gmail.com](mailto:amirhoseynerazavi@gmail.com)
 * **Repository**: [https://github.com/amirhossein1213/antigeravity-patch](https://github.com/amirhossein1213/antigeravity-patch)
 
 Contributions, pull requests, and bug reports are welcome!

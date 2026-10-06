@@ -13,11 +13,12 @@ We take security seriously. If you discover a vulnerability, please report it re
 
 ### How to Report
 
-**Option 1 — Private email (preferred for sensitive issues):**
-Send details to [faslolkhitab@gmail.com](mailto:faslolkhitab@gmail.com) with subject: `[SECURITY] Antigravity Proxy Patch`
+**Option 1 — Direct Contact (Email & Telegram):**
+- Email: [amirhoseynerazavi@gmail.com](mailto:amirhoseynerazavi@gmail.com) with subject: `[SECURITY] Antigravity Proxy Patch`
+- Telegram: [@amirgard](https://t.me/amirgard)
 
 **Option 2 — GitHub Security Advisory:**
-Use [GitHub's private vulnerability reporting](https://github.com/kakajan/antigravity-patch/security/advisories/new)
+Use [GitHub's private vulnerability reporting](https://github.com/amirhossein1213/antigeravity-patch/security/advisories/new)
 
 ### What to Include
 
@@ -83,7 +84,7 @@ These can be removed via **System Properties > Environment Variables** or by run
 ## Trusted Sources
 
 Only download this patch from the official repository:
-- **Official:** `https://github.com/kakajan/antigravity-patch`
+- **Official:** `https://github.com/amirhossein1213/antigeravity-patch`
 
 Do NOT trust mirrors, forks, or redistributed copies from unknown sources.
 
