@@ -1,442 +1,194 @@
-# Antigravity Proxy Patch
+# Google Antigravity Proxy & Geo-Restriction Patch 🚀
 
-> **Fix Google Antigravity authentication issues behind corporate proxies, VPNs, and restricted networks.**
+> **Comprehensive, 1-Click Solution to bypass Google Antigravity authentication blocks, HTTP 403 Forbidden errors, and regional sanctions (Iran, corporate firewalls, restricted networks).**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.9-green.svg)](antigravity-proxy-patch/README.txt)
-[![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](#requirements)
-[![Stars](https://img.shields.io/github/stars/kakajan/antigravity-patch?style=social)](https://github.com/kakajan/antigravity-patch)
+[![Version](https://img.shields.io/badge/version-1.9--smart-green.svg)](CHANGELOG.md)
+[![Platform](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-lightgrey.svg)](#requirements)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-amirhossein1213%2Fantigeravity--patch-blue?logo=github)](https://github.com/amirhossein1213/antigeravity-patch)
 
-**English** | [فارسی](README-FA.md)
+**English** | [فارسی](README-FA.md) | **[📖 Interactive Visual Web Guide (guide.html)](guide.html)**
 
 ---
 
 ## Table of Contents
 
-- [The Problem](#the-problem)
-- [The Solution](#the-solution)
-- [How It Works](#how-it-works)
-- [Requirements](#requirements)
-- [Quick Start](#quick-start)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Usage](#usage)
+- [Overview & The Problem](#overview--the-problem)
+- [How It Works (4-Layer Proxy Tunneling)](#how-it-works-4-layer-proxy-tunneling)
+- [Key Features in v1.9 Smart](#key-features-in-v19-smart)
+- [Quick Start (1-Click Install)](#quick-start-1-click-install)
+  - [Option A: 1-Click Batch Installer (Recommended)](#option-a-1-click-batch-installer-recommended)
+  - [Option B: Native Windows GUI Window (No Terminal)](#option-b-native-windows-gui-window-no-terminal)
+  - [Option C: Visual HTML Guide in Browser](#option-c-visual-html-guide-in-browser)
+- [Supported Proxy Tools & Auto-Detected Ports](#supported-proxy-tools--auto-detected-ports)
+- [Tools & Scripts in This Repository](#tools--scripts-in-this-repository)
+- [Signing In to Google (OAuth Workflow)](#signing-in-to-google-oauth-workflow)
 - [After Antigravity Updates](#after-antigravity-updates)
-- [Uninstall](#uninstall)
-- [Troubleshooting](#troubleshooting)
-- [FAQ](#faq)
+- [Uninstallation](#uninstallation)
+- [Troubleshooting & FAQ](#troubleshooting--faq)
 - [Security & Transparency](#security--transparency)
-- [Contributing](#contributing)
-- [Support the Project](#support-the-project)
-- [Contact](#contact)
+- [Author & Maintenance](#author--maintenance)
 - [License](#license)
 
 ---
 
-## The Problem
+## Overview & The Problem
 
-[Google Antigravity](https://antigravity.google/) (Google's AI-powered IDE based on VS Code) requires direct access to Google's authentication servers (`*.googleapis.com`, `accounts.google.com`, etc.) for sign-in and AI features.
+[Google Antigravity](https://antigravity.google/) is Google's AI-first code assistant and IDE environment built on the VS Code core. Using Antigravity requires logging into a Google Account and connecting to Google Cloud backend APIs (`*.googleapis.com`, `accounts.google.com`, `cloudcode.googleapis.com`).
 
-**This breaks for users who:**
-
-- Work behind a **corporate HTTP proxy** (enterprise environments)
-- Use a **VPN or proxy** due to regional restrictions (sanctions, geo-blocking)
-- Are located in countries with **limited access** to Google services (Iran, Syria, etc.)
-- Have network configurations where `language_server.exe` **bypasses system proxy settings**
-
-**Common error messages:**
-
-```
-failed to make code assist backend request
-Authentication failed: unable to reach accounts.google.com
-language_server.exe: connection refused
-```
-
-## The Solution
-
-**Antigravity Proxy Patch** is a lightweight, open-source proxy injection tool that forces all Antigravity processes — including `language_server.exe`, `node.exe`, and the main IDE — to route traffic through your configured HTTP proxy.
-
-**Key features:**
-
-- **DLL injection** via `version.dll` — intercepts network calls at the process level
-- **Automatic configuration** — sets environment variables, VS Code settings, and GUI config
-- **One-click install** — simple batch script, no admin rights required (usually)
-- **Non-destructive** — easily removable, keeps your settings intact
-- **Transparent** — open source, no telemetry, no data collection
-
-## How It Works
-
-```
-┌─────────────────┐     ┌──────────────────┐     ┌─────────────┐
-│   Antigravity    │────▶│  version.dll     │────▶│  Your Proxy  │
-│   (language_     │     │  (intercepts     │     │  (VPN/Corp)  │
-│    server.exe)   │     │   network calls) │     │              │
-└─────────────────┘     └──────────────────┘     └──────┬───────┘
-                                                         │
-                                                         ▼
-                                                  ┌─────────────┐
-                                                  │   Google     │
-                                                  │   Servers    │
-                                                  └─────────────┘
-```
-
-1. `version.dll` is placed next to `Antigravity.exe` (Windows DLL search order loads it automatically)
-2. On launch, it reads `config.proxy.json` for your proxy host/port
-3. It intercepts HTTP/HTTPS connections from target processes
-4. Routes all traffic through your configured upstream proxy
-5. Authentication and AI features work normally
-
-## Repository Structure & Supported IDEs
-
-This repository is split into two separate patch packages depending on your Google Antigravity installation:
-
-*   **[Antigravity 2](./Antigravity%202)**: Specifically configured for **Google Antigravity 2.x** (typically installed in `%LOCALAPPDATA%\Programs\Antigravity`).
-*   **[Antigravity IDE](./Antigravity%20IDE)**: Specifically configured for **Google Antigravity IDE** (typically installed in `%LOCALAPPDATA%\Programs\Antigravity IDE`).
-
-Choose the folder matching your installed version, and follow the steps below using the scripts inside that folder.
+**Connection is blocked in restricted regions (such as Iran) and enterprise proxies:**
+1. **HTTP 403 Forbidden Geo-Blocking**: Google blocks connections originating from sanctioned IP addresses when authenticating or generating code.
+2. **Subprocesses Bypass System Proxy**: Background processes spawned by the IDE (`language_server.exe`, `node.exe`) bypass default Windows network settings unless explicitly hooked, causing:
+   ```text
+   failed to make code assist backend request
+   Authentication failed: unable to reach accounts.google.com
+   language_server.exe: connection refused
+   ```
+3. **OAuth Redirect Failure**: If the proxy/TUN improperly hijacks `127.0.0.1`, browser callbacks from Google Sign-In fail to reach the local IDE callback server.
 
 ---
 
-## Requirements
+## How It Works (4-Layer Proxy Tunneling)
 
-| Requirement | Details |
-|-------------|---------|
-| **OS** | Windows 10/11 (x64) |
-| **Antigravity** | Google Antigravity 2.x OR Google Antigravity IDE installed |
-| **Proxy** | Access to an HTTP proxy (corporate, VPN, or local like Clash/V2Ray) |
-| **PowerShell** | 5.1+ (included in Windows 10/11) |
-| **Admin rights** | Not required for user-level install (may be needed for env vars on locked-down PCs) |
-
-## Quick Start
-
-**3 steps to fix Antigravity authentication:**
-
-```powershell
-# 1. Clone or download this repository
-git clone https://github.com/kakajan/antigravity-patch.git
-
-# 2. Open the matching folder (Antigravity 2 or Antigravity IDE) and edit settings:
-# Open: <Folder>/antigravity-proxy-patch/proxy.settings.txt
-# Set your proxy HOST and PORT
-
-# 3. Run the installer
-# Double-click: <Folder>/antigravity-proxy-patch/Install-Patch.bat
-```
-
-Then launch Antigravity using the proxy-aware launcher inside your install folder:
-
-*   **For Antigravity 2:**
-    ```
-    %LOCALAPPDATA%\Programs\Antigravity\Antigravity-with-proxy.bat
-    ```
-*   **For Antigravity IDE:**
-    ```
-    %LOCALAPPDATA%\Programs\Antigravity IDE\Antigravity-with-proxy.bat
-    ```
-
-> **Important:** Do NOT use the regular Start Menu shortcut — `version.dll` won't load.
-
-
-## Installation
-
-First, navigate to the folder corresponding to your edition (**`Antigravity 2`** or **`Antigravity IDE`**). All subsequent files and scripts are located within that folder (referred to as `<Folder>`).
-
-### Step 1: Configure Your Proxy
-
-Open `<Folder>/antigravity-proxy-patch/proxy.settings.txt` in any text editor:
-
-```ini
-# Edit these values before running Install-Patch.bat
-HOST=127.0.0.1
-PORT=12334
-TYPE=http
-```
-
-**Common proxy configurations:**
-
-| Proxy Tool | HOST | PORT | Notes |
-|------------|------|------|-------|
-| Clash | `127.0.0.1` | `7890` | Default HTTP proxy port |
-| V2RayN | `127.0.0.1` | `10809` | HTTP proxy (not SOCKS) |
-| Shadowsocks | `127.0.0.1` | `1080` | With HTTP proxy plugin |
-| Corporate proxy | Your corp IP | Your port | Ask your IT department |
-| Squid | `127.0.0.1` | `3128` | Default Squid port |
-
-### Step 2: Run the Installer
-
-**Option A — Double-click (recommended):**
+This patch intercepts and tunnels all Antigravity network traffic across 4 layers simultaneously:
 
 ```
-Double-click: <Folder>/antigravity-proxy-patch/Install-Patch.bat
+┌─────────────────────────────────┐
+│       Google Antigravity        │
+│  (IDE, Node.js, LanguageServer) │
+└────────────────┬────────────────┘
+                 │
+                 ▼
+ ┌───────────────────────────────┐      ┌─────────────────────────────┐
+ │  version.dll Hook Injection   │      │ Windows Environment Vars    │
+ │  (Winsock & WinHTTP Hooks)    │ ───▶ │   HTTP_PROXY, HTTPS_PROXY   │
+ └───────────────┬───────────────┘      └──────────────┬──────────────┘
+                 │                                     │
+                 ▼                                     ▼
+ ┌───────────────────────────────┐      ┌─────────────────────────────┐
+ │ Internal VS Code Settings     │      │ Custom Desktop Shortcut     │
+ │ (http.proxy, proxySupport)    │ ───▶ │ (--proxy-server flag)       │
+ └───────────────┬───────────────┘      └──────────────┬──────────────┘
+                 │                                     │
+                 └──────────────────┬──────────────────┘
+                                    │
+                                    ▼
+                         ┌────────────────────┐
+                         │ Local HTTP Proxy   │ (Clash Verge / v2rayN)
+                         │  127.0.0.1:PORT    │
+                         └──────────┬─────────┘
+                                    │
+                                    ▼
+                         ┌────────────────────┐
+                         │   Google Servers   │ (Google OAuth & Gemini AI)
+                         │  (Status: 200 OK)  │
+                         └────────────────────┘
 ```
 
-**Option B — PowerShell (advanced):**
+1. **DLL Proxy Injection**: `version.dll` loads side-by-side with `Antigravity.exe` and `language_server.exe`, intercepting Winsock/WinHTTP connections.
+2. **VS Code Settings**: Configures `http.proxy` and `http.proxySupport: override` in user data directories.
+3. **System Environment**: Configures user-level `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY=localhost,127.0.0.1`.
+4. **Desktop Launchers**: Creates shortcuts with explicit `--proxy-server` arguments.
 
-Open PowerShell inside the `<Folder>/antigravity-proxy-patch` directory and run:
+---
 
-```powershell
-# Custom install directory (specify your Antigravity installation folder)
-.\Install-Patch.ps1 -AntigravityDir "C:\Program Files\<Edition>"
+## Key Features in v1.9 Smart
 
-# Skip environment variable changes
-.\Install-Patch.ps1 -SkipEnv
+* 🔍 **Auto Proxy Port Detection**: Automatically scans active local proxy ports (`7897`, `7890`, `10809`, `2080`, etc.) and tests real HTTP reachability to Google before applying.
+* 📦 **Dual Edition Support**: Detects and patches both **Google Antigravity IDE** and **Google Antigravity 2.x**.
+* 🖥️ **Native Windows GUI**: Includes `Iran-Patch-GUI.bat` with a modern Windows Forms UI (100% RTL and Persian font support).
+* 🩺 **6-Point Health Check**: Includes `Verify-Connection.bat` to test proxy port, DLL presence, config health, and Google endpoint connectivity.
+* 🖥️ **Windows Terminal Compatible**: Automatically launches with `wt.exe` when available for crisp font rendering.
+* 📖 **Standalone Visual Web Guide**: Includes `guide.html` with an interactive terminal simulator and FAQs.
 
-# Skip VS Code settings changes
-.\Install-Patch.ps1 -SkipUserSettings
+---
 
-# Silent mode (no prompts)
-.\Install-Patch.ps1 -Quiet
-```
+## Quick Start (1-Click Install)
 
-### Step 3: Launch Antigravity
+### Prerequisite:
+Ensure your local VPN or proxy client is running (**Clash Verge**, **v2rayN**, **Clash**, **Sing-box**, etc.).
 
-Always launch Antigravity using the proxy-aware launcher inside your install folder:
+### Option A: 1-Click Batch Installer (Recommended)
+1. Double-click **`Install-Iran-Patch.bat`**.
+2. The installer automatically detects your active proxy (e.g. port `7897` for Clash Verge or `10809` for v2rayN):
+   ```text
+   [OK] Active proxy detected: Clash Verge / Mihomo on port 7897
+   Use port 7897? (Press Enter to confirm)
+   ```
+3. Press **Enter**.
+4. The patch applies across all editions and creates dedicated shortcuts on your Desktop.
 
-*   **For Antigravity 2:**
-    ```
-    %LOCALAPPDATA%\Programs\Antigravity\Antigravity-with-proxy.bat
-    ```
-*   **For Antigravity IDE:**
-    ```
-    %LOCALAPPDATA%\Programs\Antigravity IDE\Antigravity-with-proxy.bat
-    ```
+### Option B: Native Windows GUI Window (No Terminal)
+If you prefer a clean graphic window:
+1. Double-click **`Iran-Patch-GUI.bat`**.
+2. Click **⚡ Install & Activate Patch**.
+3. A success dialog appears immediately.
 
-You can create a desktop shortcut to this `.bat` file for convenience.
+### Option C: Visual HTML Guide in Browser
+Open **`guide.html`** in any web browser to view the step-by-step interactive walkthrough.
 
-## Configuration
+---
 
-### What the Installer Does
+## Supported Proxy Tools & Auto-Detected Ports
 
-The `Install-Patch.ps1` script performs these actions:
+| Proxy Tool | Default Port | Auto-Detect & Tested |
+|:---|:---:|:---:|
+| **Clash Verge / Mihomo** | `7897` | Supported (Tested HTTP 200) |
+| **Clash for Windows / Meta** | `7890` | Supported (Tested HTTP 200) |
+| **v2rayN / Xray Core (HTTP)** | `10809` | Supported (Tested HTTP 200) |
+| **Sing-box / NekoBox** | `2080` | Supported (Tested HTTP 200) |
+| **Shadowsocks (HTTP)** | `1080` | Supported (Tested HTTP 200) |
+| Enterprise / Custom Proxy | Custom | Can enter custom port |
 
-| Action | Location | Purpose |
-|--------|----------|---------|
-| Copies `version.dll` | `Antigravity\` or `Antigravity IDE\` | DLL injection for proxy interception |
-| Generates `config.json` | `Antigravity\` or `Antigravity IDE\` | Proxy configuration for the DLL |
-| Creates `Antigravity-with-proxy.bat` | `Antigravity\` or `Antigravity IDE\` | Launcher that sets env vars before starting |
-| Sets user env vars | `HTTP_PROXY`, `HTTPS_PROXY`, `NO_PROXY` | System-wide proxy for child processes |
-| Updates VS Code settings | `%APPDATA%\Antigravity\User\settings.json` | `http.proxy`, `http.proxySupport` |
-| Updates GUI config | `%APPDATA%\Antigravity\gui_config.json` | `upstream_proxy` settings |
+---
 
-### Proxy Settings File
+## Tools & Scripts in This Repository
 
-`proxy.settings.txt` format:
+* **`Install-Iran-Patch.bat`**: 1-click installer with automatic port detection.
+* **`Iran-Patch-GUI.bat`**: Native Windows GUI utility.
+* **`Verify-Connection.bat`**: 6-point connectivity and health diagnostic tool.
+* **`Uninstall-Iran-Patch.bat`**: Complete clean uninstaller.
+* **`guide.html`**: Interactive Persian visual guide with terminal simulator.
+* **`Push-To-GitHub.bat`**: 1-click helper to push and sync updates to your GitHub repository.
 
-```ini
-# Lines starting with # are comments
-HOST=127.0.0.1    # Proxy hostname or IP address
-PORT=12334        # Proxy port number
-TYPE=http         # Proxy type: http (only http is supported)
-```
+---
 
-### Advanced Configuration
+## Signing In to Google (OAuth Workflow)
 
-The generated `config.proxy.json` supports additional options:
+1. Keep your proxy active.
+2. Launch Antigravity from the newly created Desktop shortcut:
+   * **`Antigravity IDE (Iran Patch)`** or **`Antigravity 2 (Iran Patch)`**
+3. Click the blue **Sign in** button in the lower corner or chat panel.
+4. Your default browser opens to the Google Accounts page without 403 Forbidden errors.
+5. Authorize your account; Antigravity immediately unlocks full AI chat and autocompletion features.
 
-```json
-{
-  "proxy": {
-    "type": "http",
-    "host": "127.0.0.1",
-    "port": 12334
-  },
-  "target_processes": [
-    "language_server.exe",
-    "language_server_windows",
-    "Antigravity.exe",
-    "Antigravity IDE.exe",
-    "node.exe"
-  ],
-  "proxy_rules": {
-    "allowed_ports": [80, 443, 8080, 12334],
-    "default_action": "proxy",
-    "dns_mode": "direct"
-  },
-  "timeout": {
-    "connect": 60000,
-    "recv": 60000,
-    "send": 60000
-  },
-  "log_level": "info"
-}
-```
-
-## Usage
-
-### Daily Use
-
-1. Start your proxy/VPN tool (Clash, V2Ray, etc.)
-2. Launch Antigravity using the proxy-aware batch file (`Antigravity-with-proxy.bat`) in your install directory.
-3. Sign in to Google — authentication should work.
-4. Use AI features normally.
-
-### Verify It's Working
-
-After launching once, check the proxy log:
-
-*   **For Antigravity 2:**
-    ```
-    %LOCALAPPDATA%\Programs\Antigravity\logs\proxy-YYYYMMDD.log
-    ```
-*   **For Antigravity IDE:**
-    ```
-    %LOCALAPPDATA%\Programs\Antigravity IDE\logs\proxy-YYYYMMDD.log
-    ```
-
-Look for these lines:
-
-```
-proxy=127.0.0.1:12334
-HTTP CONNECT: tunnel established for *.googleapis.com
-```
-
-### Using on Another Computer
-
-1. Copy your matching edition folder (e.g. `Antigravity IDE`) to a USB drive or network share.
-2. Install Google Antigravity on the target PC.
-3. Edit `proxy.settings.txt` inside that folder for the target network's proxy.
-4. Run `Install-Patch.bat`.
-5. Launch with `Antigravity-with-proxy.bat`.
+---
 
 ## After Antigravity Updates
 
-Antigravity updates overwrite `version.dll` and `config.json`. After each update:
+When Google pushes an update to Antigravity, binary folders may be overwritten.
+Simply double-click **`Install-Iran-Patch.bat`** again to re-apply the patch in 5 seconds.
 
-**Option A — Use the reinstall script:**
+---
 
-```
-Double-click: <Folder>/Reinstall-Proxy-Patch.bat
-```
+## Uninstallation
 
-**Option B — Re-run the installer manually:**
+To revert all system settings:
+* Double-click **`Uninstall-Iran-Patch.bat`** (or click "Uninstall Patch" in the GUI window).
+* All injected DLLs, proxy configuration files, environment variables, and shortcuts are cleanly removed.
 
-```
-Double-click: <Folder>/antigravity-proxy-patch/Install-Patch.bat
-```
+---
 
-## Uninstall
+## Author & Maintenance
 
-Run the uninstaller inside your patch folder:
+* **Author & Maintainer**: [amirhossein1213](https://github.com/amirhossein1213)
+* **Email**: `amirhoseynerazavi@gmail.com`
+* **Repository**: [https://github.com/amirhossein1213/antigeravity-patch](https://github.com/amirhossein1213/antigeravity-patch)
 
-```
-Double-click: <Folder>/antigravity-proxy-patch/Uninstall-Patch.bat
-```
+Contributions, pull requests, and bug reports are welcome!
 
-
-This removes:
-- `version.dll` from Antigravity folder
-- `config.json` and `config.proxy.json`
-
-This does **NOT** remove:
-- `Antigravity-with-proxy.bat` (delete manually if desired)
-- Environment variables (remove manually via System Properties)
-- VS Code proxy settings (edit `%APPDATA%\Antigravity\User\settings.json`)
-
-## Troubleshooting
-
-### "version.dll missing" error
-
-The DLL was removed by an Antigravity update. Re-run `Install-Patch.bat`.
-
-### Authentication still fails
-
-1. Verify your proxy is running and accessible
-2. Check `proxy.settings.txt` has correct HOST and PORT
-3. Check the log: `%LOCALAPPDATA%\Programs\Antigravity\logs\proxy-YYYYMMDD.log`
-4. Make sure you're launching with `Antigravity-with-proxy.bat`, not the Start Menu shortcut
-
-### "Cannot copy version.dll" error
-
-Antigravity or `language_server.exe` is still running. Close all Antigravity windows and processes, then re-run the installer.
-
-### Proxy works in IDE but not for language_server
-
-This is exactly what this patch fixes. If it's still happening:
-1. Verify `version.dll` exists in both `Antigravity\` and `Antigravity\resources\bin\`
-2. Check `config.json` has correct proxy settings
-3. Restart Antigravity using `Antigravity-with-proxy.bat`
-
-### Corporate proxy with authentication
-
-The current version supports unauthenticated HTTP proxies. For authenticated proxies, configure your local proxy tool (Clash, V2Ray) to handle upstream auth, then point the patch to your local proxy.
-
-## FAQ
-
-**Q: Is this safe? Is there any malware?**
-A: The patch is fully open source. `version.dll` is a pre-compiled proxy injection DLL from the [antigravity-proxy](https://github.com/nicedoc/antigravity-proxy) project. You can inspect all source code. No data is collected, no telemetry is sent.
-
-**Q: Will Google ban my account for using this?**
-A: No. This patch only routes traffic through a proxy — it doesn't modify authentication tokens, API calls, or any Google service behavior. It's functionally identical to using a system-wide proxy.
-
-**Q: Does this work with SOCKS proxies?**
-A: Not directly. Use an HTTP proxy. Most proxy tools (Clash, V2Ray, Shadowsocks) provide an HTTP proxy interface alongside SOCKS.
-
-**Q: Can I use this on macOS or Linux?**
-A: This patch is Windows-only. The DLL injection technique is specific to Windows. macOS/Linux users should configure system-wide proxy or use `proxychains`.
-
-**Q: My proxy port changes every time I restart my VPN. What do I do?**
-A: Edit `proxy.settings.txt` and re-run `Install-Patch.bat` each time. Or configure your VPN to use a fixed port.
-
-**Q: Does this affect other applications on my PC?**
-A: The installer sets user-level `HTTP_PROXY` / `HTTPS_PROXY` environment variables, which some apps may use. To avoid this, run with `-SkipEnv` and rely only on the `.bat` launcher.
-
-## Security & Transparency
-
-**We take your trust seriously.** Here's what you need to know:
-
-- **Open source:** Every file in this repository is inspectable. The installer is a readable PowerShell script.
-- **No data collection:** Zero telemetry, zero analytics, zero tracking.
-- **No modification of Google services:** We only route traffic — we don't intercept, modify, or log any content.
-- **DLL source:** `version.dll` is from the open-source [antigravity-proxy](https://github.com/nicedoc/antigravity-proxy) project.
-- **Reversible:** `Uninstall-Patch.bat` removes all changes cleanly.
-
-**Verify for yourself:**
-
-```powershell
-# Read the installer source
-notepad antigravity-proxy-patch\Install-Patch.ps1
-
-# Check what env vars were set
-[Environment]::GetEnvironmentVariable("HTTP_PROXY", "User")
-```
-
-## Contributing
-
-Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-**Ideas for contribution:**
-- macOS/Linux support
-- SOCKS proxy support
-- Authenticated proxy support
-- GUI configuration tool
-- Auto-detect proxy settings
-- Documentation translations
-
-## Support the Project
-
-If this patch saved your day, here's how you can help:
-
-- **Star this repo** — it helps others find the project
-- **Share it** — tell colleagues, forums, communities
-- **Report bugs** — open an [issue](https://github.com/kakajan/antigravity-patch/issues)
-- **Contribute** — submit a [pull request](https://github.com/kakajan/antigravity-patch/pulls)
-
-## Contact
-
-| | |
-|---|---|
-| **Author** | **kakajan** (Senior Full-Stack Developer, AI Coach & Instructor) |
-| **Company** | **AYTRONIC** \| آیترونیک |
-| **Email** | [faslolkhitab@gmail.com](mailto:faslolkhitab@gmail.com) |
-| **GitHub** | [github.com/kakajan](https://github.com/kakajan) |
-| **Issues** | [github.com/kakajan/antigravity-patch/issues](https://github.com/kakajan/antigravity-patch/issues) |
-
-> 18+ years of full-stack development experience. Available for consulting, coaching, and AI/ML training.
+---
 
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-
----
-
-**Made with care for the developer community.** If you're behind a proxy and struggling with Antigravity, this patch is for you.
