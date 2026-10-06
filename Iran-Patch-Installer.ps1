@@ -1,14 +1,14 @@
 ﻿#Requires -Version 5.1
 <#
 .SYNOPSIS
-  نصاب هوشمند و جامع پچ ضد تحریم Google Antigravity برای کاربران ایران
+  Smart & Comprehensive Anti-Sanctions Patch Installer for Google Antigravity in Iran
 .DESCRIPTION
-  این اسکریپت به صورت خودکار:
-  1. پورت پراکسی فعال (Clash Verge 7897, Clash 7890, v2rayN 10809, Sing-box 2080 و ...) را اسکن و تست می‌کند.
-  2. نسخه‌های نصب‌شده Antigravity IDE و Antigravity 2 را شناسایی می‌کند.
-  3. تزریق هوشمند version.dll و تنظیم config.json را در تمامی مسیرها انجام می‌دهد.
-  4. تنظیمات VS Code و متغیرهای محیطی سیستم را اعمال می‌کند.
-  5. میانبرهای دسکتاپ را برای اجرای بدون مشکل احراز هویت ایجاد می‌کند.
+  In script be soorate khodkar:
+  1. Port proxy fa'al (Clash Verge 7897, Clash 7890, v2rayN 10809, Sing-box 2080 va ...) ra scan va test mikonad.
+  2. Noskhehaye nasb-shodeye Antigravity IDE va Antigravity 2 ra shenasayi mikonad.
+  3. version.dll va config.json ra dar tamamiye masirha gharar midahad.
+  4. Tanzimate VS Code va motaghayyerhaye mohitiye system ra e'emal mikonad.
+  5. Mianborhaye Desktop ra baraye ejraye bedoone moshkel misazad.
 #>
 
 param(
@@ -18,7 +18,7 @@ param(
 )
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-$Host.UI.RawUI.WindowTitle = "Antigravity Iran Proxy Patch Installer | نصاب پچ ضد تحریم آنتی‌گرویتی"
+$Host.UI.RawUI.WindowTitle = "Antigravity Iran Proxy Patch Installer"
 
 function Safe-ReadHost($prompt, $default="") {
     if ($Quiet -or $Auto -or [Console]::IsInputRedirected) {
@@ -37,8 +37,8 @@ function Print-Header {
     if (-not $Quiet) {
         Clear-Host
         Write-Host "======================================================================" -ForegroundColor Cyan
-        Write-Host "         پچ جامع و هوشمند ضد تحریم Google Antigravity برای ایران       " -ForegroundColor Yellow
-        Write-Host "              (رفع تضمینی مشکل ورود به گوگل و خطاهای تحریم)            " -ForegroundColor Green
+        Write-Host "     Patch Jame va Hooshmand Zed-Tahrim Google Antigravity (Iran)     " -ForegroundColor Yellow
+        Write-Host "          (Raf'e Tazmini Moshkel Vorood be Google va Tahrim)          " -ForegroundColor Green
         Write-Host "======================================================================" -ForegroundColor Cyan
         Write-Host ""
     }
@@ -63,12 +63,12 @@ function Write-Fail($msg) {
 Print-Header
 
 # -------------------------------------------------------------
-# گام ۱: پیدا کردن مسیر پچ و فایل‌های اصلی (DLL و قالب‌ها)
+# Gam 1: Peyda kardane masire patch va file-haye asli (DLL & Templates)
 # -------------------------------------------------------------
-Write-Step "بررسی فایل‌های اصلی پچ..."
+Write-Step "Barresiye file-haye asliye patch..."
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
-# جستجوی version.dll
+# Jostojooye version.dll
 $dllCandidates = @(
     (Join-Path $ScriptDir "Antigravity IDE\antigravity-proxy-patch\proxy\version.dll"),
     (Join-Path $ScriptDir "Antigravity 2\antigravity-proxy-patch\proxy\version.dll"),
@@ -84,13 +84,13 @@ foreach ($cand in $dllCandidates) {
 }
 
 if (-not $DllPath) {
-    Write-Fail "فایل version.dll پیدا نشد! لطفاً مطمئن شوید بسته پچ به صورت کامل دانلود شده است."
-    Read-Host "برای خروج Enter را بزنید"
+    Write-Fail "File version.dll peyda nashod! Lotfan motmaen shavid basteye patch kamel download shode ast."
+    Safe-ReadHost "Baraye khorooj Enter ra bezanid"
     exit 1
 }
-Write-Success "فایل version.dll با موفقیت یافت شد: $DllPath"
+Write-Success "File version.dll ba movafaghiyat yaft shod: $DllPath"
 
-# جستجوی قالب کانفیگ
+# Jostojooye template config
 $templateCandidates = @(
     (Join-Path $ScriptDir "Antigravity IDE\antigravity-proxy-patch\config.proxy.template.json"),
     (Join-Path $ScriptDir "Antigravity 2\antigravity-proxy-patch\config.proxy.template.json"),
@@ -106,9 +106,9 @@ foreach ($cand in $templateCandidates) {
 }
 
 # -------------------------------------------------------------
-# گام ۲: تشخیص خودکار پورت پراکسی فعال
+# Gam 2: Tashkhise khodkare porte proxy fa'al
 # -------------------------------------------------------------
-Write-Step "اسکن خودکار نرم‌افزارهای فیلترشکن / پراکسی فعال..."
+Write-Step "Scan khodkare narm-afzarhaye filter-shekan / proxy-e fa'al..."
 
 $KnownPorts = @(
     @{ Name = "Clash Verge / Mihomo"; Port = 7897 },
@@ -127,7 +127,7 @@ foreach ($p in $KnownPorts) {
     $port = $p.Port
     $name = $p.Name
     
-    # تست باز بودن پورت
+    # Test baz boodane port
     $tcp = New-Object System.Net.Sockets.TcpClient
     $connect = $tcp.BeginConnect("127.0.0.1", $port, $null, $null)
     $success = $connect.AsyncWaitHandle.WaitOne(400, $false)
@@ -136,8 +136,8 @@ foreach ($p in $KnownPorts) {
             $tcp.EndConnect($connect)
             $tcp.Close()
             
-            # تست اتصال واقعی به گوگل از طریق این پورت
-            Write-Host "  - پورت $port ($name) در حال اجراست؛ در حال آزمایش اتصال به گوگل..." -NoNewline
+            # Test ettesal be Google az tarighe in port
+            Write-Host "  - Port $port ($name) dar hale ejrast; Dar hale azmayesh ettesal be Google..." -NoNewline
             try {
                 $testUrl = "https://accounts.google.com"
                 $req = [System.Net.WebRequest]::Create($testUrl)
@@ -145,12 +145,12 @@ foreach ($p in $KnownPorts) {
                 $req.Timeout = 4000
                 $resp = $req.GetResponse()
                 $resp.Close()
-                Write-Host " [موفق]" -ForegroundColor Green
+                Write-Host " [Movafagh]" -ForegroundColor Green
                 $ActiveProxyPort = $port
                 $ActiveProxyName = $name
                 break
             } catch {
-                Write-Host " [پاسخ نداد]" -ForegroundColor Yellow
+                Write-Host " [Pasokh nadad]" -ForegroundColor Yellow
                 if ($ActiveProxyPort -eq 0) {
                     $ActiveProxyPort = $port
                     $ActiveProxyName = $name
@@ -166,17 +166,17 @@ foreach ($p in $KnownPorts) {
 
 if ($CustomPort -gt 0) {
     $ActiveProxyPort = $CustomPort
-    $ActiveProxyName = "سفارشی"
+    $ActiveProxyName = "Custom"
 } elseif ($ActiveProxyPort -gt 0) {
-    Write-Success "پراکسی فعال شناسایی شد: $ActiveProxyName روی پورت $ActiveProxyPort"
-    $userConfirm = Safe-ReadHost "  آیا از پورت $ActiveProxyPort استفاده شود؟ (Enter برای تایید، یا شماره پورت دلخواه را وارد کنید)" "$ActiveProxyPort"
+    Write-Success "Proxy fa'al shenasayi shod: $ActiveProxyName rooye port $ActiveProxyPort"
+    $userConfirm = Safe-ReadHost "  Aya az port $ActiveProxyPort estefade shavad? (Enter baraye taeed, ya shomareh port delkhah ra vared konid)" "$ActiveProxyPort"
     if ($userConfirm -match '^\d+$') {
         $ActiveProxyPort = [int]$userConfirm
     }
 } else {
-    Write-Warn "هیچ نرم‌افزار پراکسی فعالی روی پورت‌های متداول یافت نشد."
-    Write-Host "  لطفاً قبل از ادامه، فیلترشکن خود (Clash Verge, v2rayN یا ...) را روشن کنید." -ForegroundColor Yellow
-    $portInput = Safe-ReadHost "  شماره پورت پراکسی HTTP خود را وارد کنید (پیش‌فرض: 7897)" "7897"
+    Write-Warn "Hich proxy-e fa'ali rooye port-haye motadavel yaft nashod."
+    Write-Host "  Lotfan ghabl az edameh, filter-shekane khod (Clash Verge, v2rayN ya ...) ra roshan konid." -ForegroundColor Yellow
+    $portInput = Safe-ReadHost "  Shomareh port proxy HTTP khod ra vared konid (Pishfarz: 7897)" "7897"
     if ($portInput -match '^\d+$') {
         $ActiveProxyPort = [int]$portInput
     } else {
@@ -185,12 +185,12 @@ if ($CustomPort -gt 0) {
 }
 
 $ProxyUrl = "http://${ActiveProxyHost}:${ActiveProxyPort}"
-Write-Success "آدرس پراکسی نهایی: $ProxyUrl"
+Write-Success "Addresse nahayiye proxy: $ProxyUrl"
 
 # -------------------------------------------------------------
-# گام ۳: شناسایی پوشه‌های نصب Antigravity
+# Gam 3: Shenasayiye pooshehaye nasbe Antigravity
 # -------------------------------------------------------------
-Write-Step "جستجوی نسخه‌های نصب‌شده Google Antigravity..."
+Write-Step "Jostojooye noskhehaye nasb-shodeye Google Antigravity..."
 
 $InstallationTargets = @()
 
@@ -214,48 +214,48 @@ foreach ($target in $potentialPaths) {
 }
 
 if ($InstallationTargets.Count -eq 0) {
-    Write-Warn "پوشه استاندارد Antigravity یافت نشد."
-    $customPath = Safe-ReadHost "  مسیر پوشه نصب Antigravity را وارد کنید (یا Enter برای جستجوی بیشتر)" ""
+    Write-Warn "Poosheye standarde Antigravity yaft nashod."
+    $customPath = Safe-ReadHost "  Masire poosheye nasbe Antigravity ra vared konid (ya Enter baraye jostojoo)" ""
     if ($customPath -and (Test-Path $customPath)) {
         $exeName = "Antigravity IDE.exe"
         if (Test-Path (Join-Path $customPath "Antigravity.exe")) { $exeName = "Antigravity.exe" }
         $InstallationTargets += [PSCustomObject]@{
-            Name = "سفارشی"
+            Name = "Custom"
             Dir  = $customPath
             Exe  = $exeName
             ExePath = (Join-Path $customPath $exeName)
         }
     } else {
-        Write-Fail "هیچ نصبی از Antigravity پیدا نشد. عملیات متوقف شد."
-        Safe-ReadHost "برای خروج Enter را بزنید"
+        Write-Fail "Hich noskhe-i az Antigravity peyda nashod. Amaliyat motevaghef shod."
+        Safe-ReadHost "Baraye khorooj Enter ra bezanid"
         exit 1
     }
 }
 
-Write-Success "تعداد نسخه‌های شناسایی شده: $($InstallationTargets.Count)"
+Write-Success "Tedad noskhehaye shenasayi shode: $($InstallationTargets.Count)"
 foreach ($inst in $InstallationTargets) {
     Write-Host "    - $($inst.Name): $($inst.Dir)" -ForegroundColor White
 }
 
 # -------------------------------------------------------------
-# گام ۴: بررسی پردازش‌های در حال اجرا
+# Gam 4: Barresiye process-haye dar hale ejra
 # -------------------------------------------------------------
-Write-Step "بررسی پردازش‌های در حال اجرا..."
+Write-Step "Barresiye process-haye dar hale ejra..."
 $runningProcesses = Get-Process -Name "Antigravity*", "language_server*" -ErrorAction SilentlyContinue
 if ($runningProcesses -and -not $Auto -and -not $Quiet) {
-    Write-Warn "برخی پردازش‌های Antigravity هم‌اکنون باز هستند."
-    $closeConfirm = Safe-ReadHost "  آیا مایلید پردازش‌های در حال اجرا بسته شوند تا فایل‌ها بدون قفل جایگزین شوند؟ (y/n، پیش‌فرض: n)" "n"
+    Write-Warn "Barkhi process-haye Antigravity ham-aknoon baz hastand."
+    $closeConfirm = Safe-ReadHost "  Aya mayelid process-ha basteh shavand ta file-ha bedoone ghoofl jaygozin shavand? (y/n, Pishfarz: n)" "n"
     if ($closeConfirm -eq "y" -or $closeConfirm -eq "Y") {
         foreach ($p in $runningProcesses) {
             try { Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue } catch {}
         }
         Start-Sleep -Milliseconds 800
-        Write-Success "پردازش‌ها بسته شدند."
+        Write-Success "Process-ha basteh shodand."
     }
 }
 
 # -------------------------------------------------------------
-# گام ۵: آماده‌سازی محتوای کانفیگ JSON
+# Gam 5: Amadeh-saziye mohtavaye config JSON
 # -------------------------------------------------------------
 $configJsonContent = @"
 {
@@ -308,15 +308,15 @@ $configJsonContent = @"
 "@
 
 # -------------------------------------------------------------
-# گام ۶: اعمال پچ بر روی هر یک از نسخه‌های شناسایی شده
+# Gam 6: E'emale patch bar rooye noskhehaye shenasayi shode
 # -------------------------------------------------------------
-Write-Step "اعمال پچ DLL و فایل‌های پیکربندی..."
+Write-Step "E'emale patch DLL va file-haye configuration..."
 
 foreach ($inst in $InstallationTargets) {
-    Write-Host "`n  -> در حال پچ کردن $($inst.Name)..." -ForegroundColor Yellow
+    Write-Host "`n  -> Dar hale patch kardane $($inst.Name)..." -ForegroundColor Yellow
     $dir = $inst.Dir
     
-    # پوشه‌های فرعی باینری
+    # Pooshehaye fareeye binary
     $subDirs = @(
         $dir,
         (Join-Path $dir "resources\bin"),
@@ -325,7 +325,6 @@ foreach ($inst in $InstallationTargets) {
     
     foreach ($sd in $subDirs) {
         if (-not (Test-Path $sd)) {
-            # اگر پوشه وجود ندارد ولی در ساختار روت است می‌سازیم یا صرفاً اگر والد وجود دارد می‌سازیم
             $parent = Split-Path $sd -Parent
             if (Test-Path $parent) {
                 try { New-Item -ItemType Directory -Path $sd -Force | Out-Null } catch {}
@@ -333,16 +332,16 @@ foreach ($inst in $InstallationTargets) {
         }
         
         if (Test-Path $sd) {
-            # ۱. کپی version.dll
+            # 1. Copy version.dll
             $targetDll = Join-Path $sd "version.dll"
             try {
                 Copy-Item -Path $DllPath -Destination $targetDll -Force
-                Write-Success "فایل version.dll کپی شد در: $sd"
+                Write-Success "File version.dll copy shod dar: $sd"
             } catch {
-                Write-Warn "امکان کپی version.dll در $sd وجود نداشت (احتمالاً فایل قفل است)."
+                Write-Warn "Emkane copy version.dll dar $sd vojood nadasht (Ehtemalan file ghofl ast)."
             }
             
-            # ۲. ایجاد config.json و config.proxy.json
+            # 2. Ijade config.json va config.proxy.json
             try {
                 $configJsonContent | Set-Content -Path (Join-Path $sd "config.json") -Encoding UTF8 -Force
                 $configJsonContent | Set-Content -Path (Join-Path $sd "config.proxy.json") -Encoding UTF8 -Force
@@ -350,7 +349,7 @@ foreach ($inst in $InstallationTargets) {
         }
     }
     
-    # ۳. ایجاد فایل تنظیمات متنی
+    # 3. Ijade file tanzimate matni
     $proxySettingsTxt = @"
 # Antigravity Iran Proxy Settings
 HOST=$ActiveProxyHost
@@ -359,19 +358,17 @@ TYPE=http
 "@
     $proxySettingsTxt | Set-Content -Path (Join-Path $dir "proxy.settings.txt") -Encoding ASCII -Force
     
-    # ۴. ساخت فایل لانچر هوشمند Antigravity-with-proxy.bat
+    # 4. Sakhte launchere Antigravity-with-proxy.bat
     $exeName = $inst.Exe
     $launcherBat = @"
 @echo off
-chcp 65001 >nul
-setlocal
+cd /d "%~dp0"
 set PROXY=$ProxyUrl
 set HTTP_PROXY=%PROXY%
 set HTTPS_PROXY=%PROXY%
 set http_proxy=%PROXY%
 set https_proxy=%PROXY%
 set NO_PROXY=localhost,127.0.0.1,*.local
-cd /d "%~dp0"
 
 if exist "%~dp0config.proxy.json" (
   copy /Y "%~dp0config.proxy.json" "%~dp0config.json" >nul 2>&1
@@ -383,9 +380,9 @@ start "" "%~dp0$exeName" --proxy-server="$ProxyUrl" %*
 "@
     $launcherBatPath = Join-Path $dir "Antigravity-with-proxy.bat"
     $launcherBat | Set-Content -Path $launcherBatPath -Encoding ASCII -Force
-    Write-Success "لانچر پراکسی ساخته شد: $launcherBatPath"
+    Write-Success "Launchere proxy sakhte shod: $launcherBatPath"
     
-    # ۵. ساخت یا به‌روزرسانی میانبر در دسکتاپ
+    # 5. Sakhte mianbore Desktop
     try {
         $wsh = New-Object -ComObject WScript.Shell
         $desktopPath = [Environment]::GetFolderPath("Desktop")
@@ -403,18 +400,18 @@ start "" "%~dp0$exeName" --proxy-server="$ProxyUrl" %*
                 $shortcut.IconLocation = "$($inst.ExePath),0"
                 $shortcut.Description = "Launch $($inst.Name) with Iran Proxy Patch"
                 $shortcut.Save()
-                Write-Success "میانبر جدید ساخته شد: $shortcutPath"
+                Write-Success "Mianbore jadid sakhte shod: $shortcutPath"
             }
         }
     } catch {
-        Write-Warn "امکان ایجاد میانبر خودکار روی دسکتاپ وجود نداشت: $($_.Exception.Message)"
+        Write-Warn "Emkane ijade mianbore khodkar rooye Desktop vojood nadasht: $($_.Exception.Message)"
     }
 }
 
 # -------------------------------------------------------------
-# گام ۷: به‌روزرسانی تنظیمات محیط کاربری VS Code / Antigravity
+# Gam 7: Beroozresaniye settings.json dar VS Code / Antigravity
 # -------------------------------------------------------------
-Write-Step "به‌روزرسانی تنظیمات داخلی VS Code (settings.json)..."
+Write-Step "Beroozresaniye tanzimate dakheliye VS Code (settings.json)..."
 
 $settingsDirs = @(
     (Join-Path $env:APPDATA "Antigravity IDE\User"),
@@ -447,16 +444,16 @@ foreach ($sDir in $settingsDirs) {
     
     try {
         ($settingsObj | ConvertTo-Json -Depth 10) | Set-Content -Path $settingsPath -Encoding UTF8 -Force
-        Write-Success "فایل تنظیمات به‌روز شد: $settingsPath"
+        Write-Success "File tanzimat berooz shod: $settingsPath"
     } catch {
-        Write-Warn "خطا در نوشتن تنظیمات: $settingsPath"
+        Write-Warn "Khata dar neveshtane tanzimat: $settingsPath"
     }
 }
 
 # -------------------------------------------------------------
-# گام ۸: تنظیم متغیرهای محیطی کاربر در ویندوز
+# Gam 8: Tanzime motaghayyerhaye mohitiye Windows
 # -------------------------------------------------------------
-Write-Step "تنظیم متغیرهای محیطی کاربری ویندوز (HTTP_PROXY / HTTPS_PROXY)..."
+Write-Step "Tanzime motaghayyerhaye mohitiye Windows (HTTP_PROXY / HTTPS_PROXY)..."
 
 try {
     [Environment]::SetEnvironmentVariable("HTTP_PROXY", $ProxyUrl, "User")
@@ -464,49 +461,49 @@ try {
     [Environment]::SetEnvironmentVariable("http_proxy", $ProxyUrl, "User")
     [Environment]::SetEnvironmentVariable("https_proxy", $ProxyUrl, "User")
     [Environment]::SetEnvironmentVariable("NO_PROXY", "localhost,127.0.0.1,*.local", "User")
-    Write-Success "متغیرهای محیطی ویندوز برای پورت $ActiveProxyPort با موفقیت تنظیم شدند."
+    Write-Success "Motaghayyerhaye mohitiye Windows baraye port $ActiveProxyPort ba movafaghiyat tanzim shodand."
 } catch {
-    Write-Warn "امکان تنظیم متغیرهای محیطی در سطح User وجود نداشت."
+    Write-Warn "Emkane tanzime motaghayyerhaye mohiti dar sathe User vojood nadasht."
 }
 
 # -------------------------------------------------------------
-# گام ۹: تست و اعتبارسنجی نهایی اتصال
+# Gam 9: Test va etebarsanjiyee nahayi
 # -------------------------------------------------------------
-Write-Step "آزمایش نهایی اتصال به سرورهای گوگل و Gemini..."
+Write-Step "Azmayeshe nahayiye ettesal be server-haye Google va Gemini..."
 
 $testUrls = @(
-    @{ Name = "Google Accounts (احراز هویت و لاگین)"; Url = "https://accounts.google.com" },
-    @{ Name = "Google APIs Backend"; Url = "https://cloudcode.googleapis.com" }
+    @{ Name = "Google Accounts (Login & Auth)"; Url = "https://accounts.google.com" },
+    @{ Name = "Google APIs Backend";            Url = "https://cloudcode.googleapis.com" }
 )
 
 foreach ($t in $testUrls) {
-    Write-Host "  - تست ارتباط با $($t.Name)..." -NoNewline
+    Write-Host "  - Test ertebat ba $($t.Name)..." -NoNewline
     try {
         $req = [System.Net.WebRequest]::Create($t.Url)
         $req.Proxy = New-Object System.Net.WebProxy($ProxyUrl)
         $req.Timeout = 5000
         $res = $req.GetResponse()
         $res.Close()
-        Write-Host " [موفق - HTTP 200]" -ForegroundColor Green
+        Write-Host " [Movafagh - HTTP 200]" -ForegroundColor Green
     } catch {
-        Write-Host " [بررسی کنید: $_]" -ForegroundColor Yellow
+        Write-Host " [Barresi konid: $_]" -ForegroundColor Yellow
     }
 }
 
 # -------------------------------------------------------------
-# پایان: نمایش پیام موفقیت و راهنمای استفاده
+# Payan: Payame movafaghiyat va rahnamaaye estefadeh
 # -------------------------------------------------------------
 Write-Host "`n======================================================================" -ForegroundColor Green
-Write-Host "            تبریک! پچ با موفقیت کامل بر روی سیستم شما نصب شد           " -ForegroundColor Yellow
+Write-Host "         Tabrik! Patch ba movafaghiyat rooye system nasb shod         " -ForegroundColor Yellow
 Write-Host "======================================================================" -ForegroundColor Green
 Write-Host ""
-Write-Host "راهنمای استفاده:" -ForegroundColor Cyan
-Write-Host "1. مطمئن شوید نرم‌افزار فیلترشکن شما (Clash / v2rayN) روشن است." -ForegroundColor White
-Write-Host "2. نرم‌افزار را از طریق میانبر جدید روی دسکتاپ اجرا کنید:" -ForegroundColor White
-Write-Host "   -> 'Antigravity IDE (ضد تحریم)' یا 'Antigravity (ضد تحریم)'" -ForegroundColor Yellow
-Write-Host "3. در گوشه نرم‌افزار روی دکمه Sign in کلیک کنید تا با موفقیت وارد شوید." -ForegroundColor White
+Write-Host "Rahnamaaye Estefadeh:" -ForegroundColor Cyan
+Write-Host "1. Motmaen shavid narm-afzare filter-shekane shoma (Clash / v2rayN) roshan ast." -ForegroundColor White
+Write-Host "2. Narm-afzar ra az tarighe mianbore jadid rooye Desktop ejra konid:" -ForegroundColor White
+Write-Host "   -> 'Antigravity IDE (Iran Patch)' ya 'Antigravity 2 (Iran Patch)'" -ForegroundColor Yellow
+Write-Host "3. Dar goosheye narm-afzar rooye dokhmeye Sign in click konid ta ba movafaghiyat vared shavid." -ForegroundColor White
 Write-Host ""
-Write-Host "نکته مهم در صورت آپدیت نرم‌افزار:" -ForegroundColor Magenta
-Write-Host "اگر در آینده Antigravity آپدیت شد، کافیست دوباره فایل Install-Iran-Patch.bat را اجرا کنید.`n" -ForegroundColor White
+Write-Host "Nokteye mohem dar soorate update:" -ForegroundColor Magenta
+Write-Host "Agar dar ayandeh Antigravity update shod, kafist dobareh Install-Iran-Patch.bat ra ejra konid.`n" -ForegroundColor White
 
-Safe-ReadHost "برای بستن این پنجره، کلید Enter را فشار دهید"
+Safe-ReadHost "Baraye bastane in panjereh, kelide Enter ra feshar dahid"

@@ -5,7 +5,7 @@ param(
 )
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-$Host.UI.RawUI.WindowTitle = "حذف پچ ضد تحریم Google Antigravity"
+$Host.UI.RawUI.WindowTitle = "Uninstall Google Antigravity Iran Patch"
 
 function Safe-ReadHost($prompt, $default="") {
     if ($Quiet -or $Auto -or [Console]::IsInputRedirected) { return $default }
@@ -19,7 +19,7 @@ function Safe-ReadHost($prompt, $default="") {
 if (-not $Quiet) {
     Clear-Host
     Write-Host "======================================================================" -ForegroundColor Cyan
-    Write-Host "                حذف پچ ضد تحریم Google Antigravity                    " -ForegroundColor Yellow
+    Write-Host "              Hazfe Patch Zed-Tahrim Google Antigravity               " -ForegroundColor Yellow
     Write-Host "======================================================================" -ForegroundColor Cyan
     Write-Host ""
 }
@@ -31,7 +31,7 @@ $targets = @(
 
 foreach ($dir in $targets) {
     if (Test-Path $dir) {
-        Write-Host "[+] در حال پاکسازی $dir..." -ForegroundColor Cyan
+        Write-Host "[+] Dar hale paksaziye $dir..." -ForegroundColor Cyan
         
         $filesToRemove = @(
             (Join-Path $dir "version.dll"),
@@ -47,36 +47,36 @@ foreach ($dir in $targets) {
         
         foreach ($f in $filesToRemove) {
             if (Test-Path $f) {
-                try { Remove-Item -Path $f -Force; Write-Host "  - حذف شد: $f" -ForegroundColor Green } catch {}
+                try { Remove-Item -Path $f -Force; Write-Host "  - Hazf shod: $f" -ForegroundColor Green } catch {}
             }
         }
     }
 }
 
-# پاکسازی متغیرهای محیطی
-Write-Host "`n[+] پاکسازی متغیرهای محیطی..." -ForegroundColor Cyan
+# Paksaziye motaghayyerhaye mohiti
+Write-Host "`n[+] Paksaziye motaghayyerhaye mohiti..." -ForegroundColor Cyan
 try {
     [Environment]::SetEnvironmentVariable("HTTP_PROXY", $null, "User")
     [Environment]::SetEnvironmentVariable("HTTPS_PROXY", $null, "User")
     [Environment]::SetEnvironmentVariable("http_proxy", $null, "User")
     [Environment]::SetEnvironmentVariable("https_proxy", $null, "User")
     [Environment]::SetEnvironmentVariable("NO_PROXY", $null, "User")
-    Write-Host "  - متغیرهای محیطی با موفقیت پاک شدند." -ForegroundColor Green
+    Write-Host "  - Motaghayyerhaye mohiti ba movafaghiyat pak shodand." -ForegroundColor Green
 } catch {}
 
 
-# پاکسازی میانبرهای دسکتاپ
-Write-Host "`n[+] بررسی میانبرهای دسکتاپ..." -ForegroundColor Cyan
+# Paksaziye mianborhaye Desktop
+Write-Host "`n[+] Barresiye mianborhaye Desktop..." -ForegroundColor Cyan
 $desktopPath = [Environment]::GetFolderPath("Desktop")
 $shortcutDirs = @($desktopPath, (Join-Path $desktopPath "01 Apps"))
 
 foreach ($sDir in $shortcutDirs) {
     if (Test-Path $sDir) {
         Get-ChildItem -Path $sDir -Filter "*Iran Patch*.lnk" -ErrorAction SilentlyContinue | ForEach-Object {
-            try { Remove-Item -Path $_.FullName -Force; Write-Host "  - میانبر حذف شد: $($_.Name)" -ForegroundColor Green } catch {}
+            try { Remove-Item -Path $_.FullName -Force; Write-Host "  - Mianbor hazf shod: $($_.Name)" -ForegroundColor Green } catch {}
         }
     }
 }
 
-Write-Host "`nپچ با موفقیت به طور کامل حذف شد." -ForegroundColor Green
-Safe-ReadHost "برای خروج Enter را بزنید"
+Write-Host "`nPatch ba movafaghiyat be tore kamel hazf shod." -ForegroundColor Green
+Safe-ReadHost "Baraye khorooj Enter ra bezanid"

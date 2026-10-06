@@ -132,7 +132,7 @@ function Append-Log($msg) {
 
 # رویداد اسکن خودکار
 $btnDetect.Add_Click({
-    Append-Log "[*] در حال اسکن پورت‌های فیلترشکن..."
+    Append-Log "[*] Dar hale scan port-haye filter-shekan..."
     $ports = @(7897, 7890, 10809, 2080, 1080)
     $found = $false
     foreach ($p in $ports) {
@@ -143,14 +143,14 @@ $btnDetect.Add_Click({
                 $tcp.EndConnect($conn)
                 $tcp.Close()
                 $txtPort.Text = "$p"
-                Append-Log "[OK] پورت فعال پیدا شد: $p"
+                Append-Log "[OK] Port fa'al peyda shod: $p"
                 $found = $true
                 break
             } catch { $tcp.Close() }
         } else { $tcp.Close() }
     }
     if (-not $found) {
-        Append-Log "[!] هیچ پورتی فعال نبود. پورت 7897 به صورت پیش‌فرض درج شد."
+        Append-Log "[!] Hich porti fa'al nabood. Port 7897 be soorate pishfarz darj shod."
     }
 })
 
@@ -158,7 +158,7 @@ $btnDetect.Add_Click({
 $btnInstall.Add_Click({
     $port = 7897
     if ($txtPort.Text -match '^\d+$') { $port = [int]$txtPort.Text }
-    Append-Log "`r`n[+] در حال اعمال پچ برای پورت $port..."
+    Append-Log "`r`n[+] Dar hale e'emale patch baraye port $port..."
     
     $installerScript = Join-Path $ScriptDir "Iran-Patch-Installer.ps1"
     if (Test-Path $installerScript) {
@@ -172,22 +172,22 @@ $btnInstall.Add_Click({
         $output = $proc.StandardOutput.ReadToEnd()
         $proc.WaitForExit()
         
-        Append-Log "[OK] پچ با موفقیت اعمال شد."
-        Append-Log "میانبر دسکتاپ: Antigravity IDE (Iran Patch)"
-        [System.Windows.Forms.MessageBox]::Show("پچ با موفقیت نصب شد!`nاکنون می‌توانید نرم‌افزار را از طریق میانبر دسکتاپ اجرا کنید.", "موفقیت", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
+        Append-Log "[OK] Patch ba movafaghiyat e'emal shod."
+        Append-Log "Mianbore Desktop: Antigravity IDE (Iran Patch)"
+        [System.Windows.Forms.MessageBox]::Show("Patch ba movafaghiyat nasb shod!`nAknon mitavanid narm-afzar ra az tarighe mianbore desktop ejra konid.", "Movafaghiyat", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
     } else {
-        Append-Log "[X] فایل Iran-Patch-Installer.ps1 یافت نشد!"
+        Append-Log "[X] File Iran-Patch-Installer.ps1 yaft nashod!"
     }
 })
 
 # رویداد تست سلامت
 $btnVerify.Add_Click({
-    Append-Log "`r`n[+] در حال تست سلامت اتصال به سرورهای گوگل..."
+    Append-Log "`r`n[+] Dar hale teste salamate ettesal be server-haye Google..."
     $verifyScript = Join-Path $ScriptDir "Verify-Connection.ps1"
     if (Test-Path $verifyScript) {
         $psi = New-Object System.Diagnostics.ProcessStartInfo
         $psi.FileName = "powershell.exe"
-        $psi.Arguments = "-NoProfile -ExecutionPolicy Bypass -Command `"& { & '$verifyScript' }`""
+        $psi.Arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$verifyScript`""
         $psi.RedirectStandardOutput = $true
         $psi.UseShellExecute = $false
         $psi.CreateNoWindow = $true
@@ -201,7 +201,7 @@ $btnVerify.Add_Click({
 
 # رویداد حذف پچ
 $btnUninstall.Add_Click({
-    $res = [System.Windows.Forms.MessageBox]::Show("آیا مطمئن هستید که می‌خواهید پچ را به طور کامل حذف کنید؟", "تایید حذف", [System.Windows.Forms.MessageBoxButtons]::YesNo, [System.Windows.Forms.MessageBoxIcon]::Question)
+    $res = [System.Windows.Forms.MessageBox]::Show("Aya motmaen hastid ke mikhahid patch ra be tore kamel hazf konid?", "Taeede Hazf", [System.Windows.Forms.MessageBoxButtons]::YesNo, [System.Windows.Forms.MessageBoxIcon]::Question)
     if ($res -eq [System.Windows.Forms.DialogResult]::Yes) {
         $uninstallScript = Join-Path $ScriptDir "Uninstall-Iran-Patch.ps1"
         if (Test-Path $uninstallScript) {
@@ -213,13 +213,13 @@ $btnUninstall.Add_Click({
             $psi.CreateNoWindow = $true
             $proc = [System.Diagnostics.Process]::Start($psi)
             $proc.WaitForExit()
-            Append-Log "[OK] پچ با موفقیت حذف شد."
+            Append-Log "[OK] Patch ba movafaghiyat hazf shod."
         }
     }
 })
 
 # متن شروع اولیه لاگ
-Append-Log "آماده به کار. روی دکمه 'نصب و فعال‌سازی پچ' کلیک کنید."
+Append-Log "Amadeh be kar. Rooye dokhmeye 'Nasb va Fa'alsazi' click konid."
 
 # نمایش فرم
 $btnDetect.PerformClick()

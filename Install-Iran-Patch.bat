@@ -13,6 +13,6 @@ title Google Antigravity Iran Patch
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0Iran-Patch-Installer.ps1"
 if errorlevel 1 (
     echo.
-    echo An error occurred during installation.
+    echo [Khata] Ejraye script ba moshkel movajeh shod. Lotfan filter-shekane khod ra check konid.
     pause
 )
